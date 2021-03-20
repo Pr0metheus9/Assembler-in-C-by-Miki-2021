@@ -25,11 +25,18 @@ int first_pass (char *fileName)
     boolean errorFlag = False; 
     boolean labelFlag = False;
 
+    /*create label array to store label if it exists*/
+    char label_array[32]; 
+
+    /*create ints to store opcode and funct if line part is a instruction*/
+    int opcode;
+    int funct;
+
     /*go over each line in file*/
     while (fgets(line, sizeof(line), file)) 
     {
       /*call function to translate line into things we can work with each time*/
-      translate_line(line,errorFlag,labelFlag);
+      translate_line(line,errorFlag,labelFlag,label_array);
     }
 
     /*close the file being used*/
@@ -37,83 +44,26 @@ int first_pass (char *fileName)
 }
 
 /*function to do stuff with the line and tables*/
-int translate_line (char *line,boolean errorFlag,boolean labelFlag)
+int translate_line (char *line,boolean errorFlag,boolean labelFlag, char label_array[32])
 {
   /*check if the line is of comment or whitespace type if so we can just skip it*/
   if(*line == ';' || *line == '\t' || *line == '\n' || *line == ' ')
     return 0;
   
-  /*check if it is a label*/
-  if(check_label(line))
+  /*check if it is a label if so set the label flag to true (following algorithm) and move to the next part of the line*/
+  if(check_label(line,label_array))
   {
     labelFlag = True;
     line = nextpart(line); 
   }
-}
 
-/*check if current part of line is a label*/
-int check_label (char *line)
-{
-  char label_array[32]; 
-  /*create array to store label characters as we go char by char in line until we find the end of the label (if it exists) max length is 31*/
-  int i = 0;
+  /*remove whitespace from the line to make it easily readable*/
+  line = clearspace(line);
 
-  /*until you find something indicating the end of the label, add char to array and keep going over char*/
-  while(*line != ':' && *line != '\0')
+  /*Check if part could be a directive. if it is a valid directive, save to the word table and continue*/
+  if(*line == '.')
   {
-    label_array[i] = *line;
-    i++;
-    line++;
+    int type = check_dir(line);
+    line = nextpart(line);
   }
-
-  /*so it is saved as a string data type*/
-  label_array[i] = '\0'; 
-
-  if(*line == ':')
-  {
-    /*check if label starts with letter*/
-    if(!((label_array[0] >= 'a' && label_array[0] <= 'z')||(label_array[0] >= 'A' && label_array[0] <= 'Z')))
-      return 0;
-    
-    /*check if : shows up after whitespace*/
-    if(label_array[i-1] == ' ' || label_array[i-1] == '\t')
-      return 0;
-
-    /*check if label with same name exists if it does return 0*/
-    if(label_exists(label_array))
-      return 0;
-
-    /*check if label has the same name as instruction*/
-    for(i = 0; i < 16; i++)
-    {
-      if(!strcmp(instructions[i].str, label_array))
-        return 0;
-    }
-
-    /*check if label has the same name as register*/
-    for(i = 0; i < 8; i++)
-    {
-      if(!strcmp(registers[i].str, label_array))
-        return 0;
-    }
-
-    /*check if label has the same name as a directive*/
-    for(i = 0; i < 4; i++)
-    {
-      if(!strcmp(directives[i].str, label_array))
-        return 0;
-    }
-  }
-  return 1;
-}
-
-/*function to get the next significant part of the line*/
-char *nextpart(char *line){
-  while(*line != ' ' && *line != '\t' && *line != ',' && *line != ':'){
-    if(*line == '\0')
-      return line;
-    line++;
-  }
-  line++;
-  return line;
 }

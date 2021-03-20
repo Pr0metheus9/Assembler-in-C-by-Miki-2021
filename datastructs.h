@@ -53,14 +53,23 @@ Function Declarations
 
 /*From first_pass*/
 int first_pass (char *);
-int translate_line (char *,boolean,boolean);
-int check_label (char *);
+int translate_line (char *,boolean,boolean, char [32]);
+
+/*From check_part.c*/
+int check_label (char *, char [32]);
+int check_dir(char *line);
+
+/*From line_help*/
 char *nextpart(char *);
+char *clearspace(char *);
 
 /*from linked_list*/
 int label_exists(char []);
 void insertLabel(char [],int,int);
 void display();
+
+/*from calculate_word.c*/
+int insert_data(char *,boolean, int);
 
 /*=========================================================
 Variable Declarations (For vars used throughout the program)
