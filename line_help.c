@@ -52,6 +52,6 @@ void display_data()
   int i;
   for(i = 0; i < DC; i++)
   {
-    printf("%d\t", data_array[i].content);
+    printf("%d\t%d\n",i,data_array[i].content );
   }
 }

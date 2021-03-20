@@ -54,10 +54,9 @@ Function Declarations
 /*From first_pass*/
 int first_pass (char *);
 int translate_line (char *,boolean,boolean, char [32]);
-
-/*From check_part.c*/
 int check_label (char *, char [32]);
 int check_dir(char *line);
+int insert_data(char *,boolean,int,char [32]);
 
 /*From line_help*/
 char *nextpart(char *);
@@ -70,8 +69,8 @@ int label_exists(char []);
 void insertLabel(char [],int,int);
 void display();
 
-/*from calculate_word.c*/
-int insert_data(char *,boolean,int,char [32]);
+
+
 
 /*=========================================================
 Variable Declarations (For vars used throughout the program)
@@ -89,6 +88,7 @@ Word data_array [RAM_SIZE/4];
 int IC; 
 int DC; 
 
+/*make keyword arrays*/
 keyword instructions[16];
 keyword directives[4];
 keyword registers[8];

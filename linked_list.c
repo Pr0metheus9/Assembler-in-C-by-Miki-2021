@@ -45,7 +45,6 @@ void insertLabel(char label[],int attribute, int value){
 
 /*check if the label already exists in the linked list*/
 int label_exists(char label[]){
-  
   /*create temp label so that we can cycle over all the nodes and initialize at first item (head)*/ 
   Label *temp;
   temp = head;
