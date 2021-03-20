@@ -3,13 +3,17 @@
 
 /*function to get the next significant part of the line*/
 char *nextpart(char *line){
-  while(*line != ' ' && *line != '\t' && *line != ',' && *line != ':'){
+  while(*line != ' ' && *line != '\t' && *line != ',' && *line != ':')
+  {
     if(*line == '\0')
+    {
       return line;
+    }
     line++;
   }
   line++;
   line = clearspace(line);
+  printf("%c",*line);
   return line;
 }
 
@@ -17,7 +21,9 @@ char *nextpart(char *line){
 char *clearspace(char *line){
   while(*line==' ' || *line=='\t'){
     if(*line == '\0')
+    {
       break;
+    }
     line++;
   }
   return line;
@@ -52,6 +58,6 @@ void display_data()
   int i;
   for(i = 0; i < DC; i++)
   {
-    printf("%d\t%d\n",i,data_array[i].content );
+    printf("%d\t%X\n",i,data_array[i].content );
   }
 }
