@@ -1,6 +1,9 @@
-#include "first_pass.c"
+/*include datastructs/defintion file*/
+#include "datastructs.h"
 
 int main() {
-   printf("%s",registers[0].str);
+   first_pass("test.as");
+   display_data();
+   display();
    return 0;
 }

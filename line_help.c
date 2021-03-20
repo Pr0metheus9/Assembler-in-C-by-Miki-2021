@@ -23,3 +23,35 @@ char *clearspace(char *line){
   return line;
 }
 
+/*gets the value of the next number from place in line*/
+int get_num(char *line){
+  int n = 0;
+  int num = 0;
+  int i;
+  
+  /*while the current char is a digit increment the digit count*/
+  while(isdigit(*line)){
+    n++;
+    line++;
+  }
+  line -= n;
+
+  /*loops through the digits and calculates the integer value*/
+  for(i = n-1; i >= 0 ; i--){
+    int x = *line - '0';
+    num += (int) x * pow(10.0,(double)i);
+    line++;
+  }
+  return num;
+}
+
+/*function to display the data types*/
+void display_data()
+{
+  /*loop over all the words\images saved and print them to the screen*/
+  int i;
+  for(i = 0; i < DC; i++)
+  {
+    printf("%d\t", data_array[i].content);
+  }
+}

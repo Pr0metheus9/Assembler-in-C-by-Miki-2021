@@ -19,7 +19,7 @@ typedef struct Node
 { 
     /*max length of label name is 31 chars + 1 for \0 for array has len 32*/
     char  name [32];
-    /*1.data, 2.code, 3.extern, 4.entry*/  
+    /*0.data, 1.code, 2.extern, 3.entry*/  
     int  attribute;
     /*Label Word Place in File*/ 
     int value;
@@ -62,6 +62,8 @@ int check_dir(char *line);
 /*From line_help*/
 char *nextpart(char *);
 char *clearspace(char *);
+int get_num(char *);
+void display_data();
 
 /*from linked_list*/
 int label_exists(char []);
@@ -69,7 +71,7 @@ void insertLabel(char [],int,int);
 void display();
 
 /*from calculate_word.c*/
-int insert_data(char *,boolean, int);
+int insert_data(char *,boolean,int,char [32]);
 
 /*=========================================================
 Variable Declarations (For vars used throughout the program)
@@ -83,27 +85,10 @@ Label *last;
 Word code_array [(RAM_SIZE/4)*3]; 
 Word data_array [RAM_SIZE/4]; 
 
-/*keywords in asm*/
-keyword instructions[] = {
-  {"mov"},{"cmp"},{"add"},{"sub"},{"lea"},
-  {"clr"},{"not"},{"inc"},{"dec"},{"jmp"},{"bne"},
-  {"jsr"},{"red"},{"prn"},{"rts"},{"stop"}
-};
-
-/*all the possible directives*/
-keyword directives[] = {
-  {"data"},{"string"},{"entry"},{"extern"}
-};
-
-/*all the possible registers*/ 
-keyword registers[] = {
-  {"r0"},{"r1"},{"r2"},{"r3"},
-  {"r4"},{"r5"},{"r6"},{"r7"}
-};
-
 /*add counters as global variables*/
+int IC; 
+int DC; 
 
-/*set initial value for instruction counter*/
-int IC = 100; 
-/*set initial value for data counter*/
-int DC = 0; 
+keyword instructions[16];
+keyword directives[4];
+keyword registers[8];

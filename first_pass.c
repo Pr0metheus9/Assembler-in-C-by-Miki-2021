@@ -29,6 +29,28 @@ int first_pass (char *fileName)
     int opcode;
     int funct;
 
+    /*set initial values for IC and DC*/
+    IC = 100;
+    DC = 0;
+  
+    /*keywords in asm*/
+    keyword instructions[] = {
+      {"mov"},{"cmp"},{"add"},{"sub"},{"lea"},
+      {"clr"},{"not"},{"inc"},{"dec"},{"jmp"},{"bne"},
+      {"jsr"},{"red"},{"prn"},{"rts"},{"stop"}
+    };
+
+    /*all the possible directives*/
+    keyword directives[] = {
+      {"data"},{"string"},{"entry"},{"extern"}
+    };
+
+    /*all the possible registers*/ 
+    keyword registers[] = {
+      {"r0"},{"r1"},{"r2"},{"r3"},
+      {"r4"},{"r5"},{"r6"},{"r7"}
+    };
+
     /*go over each line in file*/
     while (fgets(line, sizeof(line), file)) 
     {
@@ -62,5 +84,7 @@ int translate_line (char *line,boolean errorFlag,boolean labelFlag, char label_a
   {
     int type = check_dir(line);
     line = nextpart(line);
+    insert_data(line,labelFlag,type,label_array);
+    return 0;
   }
 }

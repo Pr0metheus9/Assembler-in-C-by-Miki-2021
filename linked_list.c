@@ -2,7 +2,7 @@
 #include "datastructs.h"
 
 /*add new node to linked list*/
-void insertLabel(char label[],int value,int attribute){
+void insertLabel(char label[],int attribute, int value){
 
   /*create new label pointer to the new label we want to add*/     
   Label* new_Label;
