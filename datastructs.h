@@ -100,3 +100,10 @@ keyword registers[] = {
   {"r0"},{"r1"},{"r2"},{"r3"},
   {"r4"},{"r5"},{"r6"},{"r7"}
 };
+
+/*add counters as global variables*/
+
+/*set initial value for instruction counter*/
+int IC = 100; 
+/*set initial value for data counter*/
+int DC = 0; 

@@ -17,10 +17,7 @@ int first_pass (char *fileName)
 
     /*create char to save current line content. max size for a line is 500 chars*/
     char line[501]; 
-    /*set initial value for instruction counter*/
-    int IC = 100; 
-    /*set initial value for data counter*/
-    int DC = 0; 
+
     /*create flags and set initial value of flags to false*/
     boolean errorFlag = False; 
     boolean labelFlag = False;
