@@ -80,7 +80,7 @@ int check_label (char *line)
       return 0;
 
     /*check if label with same name exists if it does return 0*/
-    if(!label_exists(label_array))
+    if(label_exists(label_array))
       return 0;
 
     /*check if label has the same name as instruction*/
