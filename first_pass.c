@@ -617,6 +617,8 @@ int addressfunc(Word iwords[],int L,char *line)
            /*light up bit in place reg and set extra word to the register number*/
            value |= 1 << reg;
            iwords[i].content = value;
+           iwords[i].are = 'A';
+           /*printf("register number %d\tregister value: %d\n",reg,value);*/
 
            line = nextpart(line);
            continue;
