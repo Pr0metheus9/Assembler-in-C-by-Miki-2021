@@ -486,10 +486,10 @@ int insert_instruction(char *line,boolean labelFlag,int *opcode, int *funct,char
 
   addressfunc(iwords,L,line);
 
-  /*insert the opcode and funct*/
+  /*insert the opcode and funct in appropriate place in word*/
   iwords[0].content |= *opcode << 8; 
   iwords[0].content |= *funct << 4;
-  
+
   /*printf("test content value: %d\n",iwords[0].content);*/
   
   /*for each of the words, if they exist, insert them into the instruction array and increment IC*/
@@ -571,6 +571,19 @@ int addressfunc(Word iwords[],int L,char *line)
       line = nextpart(line);
       continue;
     }
+
+    /*relative addressing (value 2)*/
+    else if(*line == '%')
+    {
+      /*relative addressing has only a source and not a destination*/
+      iwords[0].content |= 2 << 2;
+
+      /*make empty space for the label address in future (can't be -1 cause we already have that as default for iwords[1,2]*/
+      iwords[i].content = 0;
+      iwords[i].are = 'A';
+      continue;
+    }
+   
   }
   return 0;
 }

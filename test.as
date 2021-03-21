@@ -1,15 +1,18 @@
-.entry LIST
-.extern W
 MAIN: add r3, LIST
- lea W, r6
+LOOP: prn #48
+ lea STR, r6
+ inc r6
  mov r3, K
- sub #6, r2
- mov #5,r7
-EXIT: stop 
-
-
+ sub r1, r4
+ bne END
+ cmp val1, #-6
+ bne %END
+ dec K
+ jmp %LOOP
+END: stop
 STR: .string "abcd"
 LIST: .data 6, -9
  .data -100
+.entry K
 K: .data 31
-.extern L3 
+.extern val1
