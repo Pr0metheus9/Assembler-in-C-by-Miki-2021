@@ -110,7 +110,9 @@ int translate_line (char *line,boolean errorFlag,boolean labelFlag, char label_a
   }
 
   else
+  {
     return 1;
+  }
 }
 
 /*function to check if label is a label that can be used*/
@@ -123,7 +125,7 @@ int valid_label(char *line,char label_array[32],int i)
   }
 
   /*check if : shows up after whitespace*/
-  if(label_array[i-1] == ' ' || label_array[i-1] == '\t')
+  if(label_array[i] == ' ' || label_array[i] == '\t')
   {
     return 0;
   }
@@ -161,7 +163,6 @@ int valid_label(char *line,char label_array[32],int i)
       return 0;
     }
   }
-
   return 1;
 }
 
@@ -174,16 +175,18 @@ int check_label(char *line, char label_array[32])
   /*until you find something indicating the end of the label, add char to array and keep going over char*/
   while(*line != ':' && *line != '\0')
   {
-    if(i <= 31)
+    if(i > 31)
     {
-      label_array[i] = *line;
-      i++;
-      line++;
+      return 0;
     }
+    
+    label_array[i] = *line;
+    i++;
+    line++;
   }
 
   /*so it is saved as a string data type*/
-  label_array[i] = '\0';
+  label_array[i]='\0';
 
   if(i==0)
   {
@@ -193,7 +196,7 @@ int check_label(char *line, char label_array[32])
   /*if you reach the end of the label, check if the saved label is a valid one*/
   if(*line == ':')
   {
-    if(!valid_label(line,label_array,i))
+    if(!valid_label(line,label_array,i-1))
     {
       return 0;
     }
@@ -203,7 +206,7 @@ int check_label(char *line, char label_array[32])
       return 1;
     }
   }
-  return 1;
+  return 0;
 }
 
 /*check if part of line is a directive if so return the "type" of directive*/
@@ -295,7 +298,7 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
         line++;
         line = clearspace(line);
         line = nextpart(line);
-        
+
         /*if you reached the end*/
         if(line == NULL || *line == '\0')
         {
