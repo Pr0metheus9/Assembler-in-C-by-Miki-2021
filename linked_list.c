@@ -67,9 +67,9 @@ void display()
 {
     Label *temp;
     temp = head;
+    printf("\n");
     while(temp != NULL)
     {
-      
       printf("%s\t%d\t%d\n",temp->name,temp->value,temp->attribute);
       temp=temp->next;
     }

@@ -106,6 +106,58 @@ int translate_line (char *line,boolean errorFlag,boolean labelFlag, char label_a
     return 1;
 }
 
+/*function to check if label is a label that can be used*/
+int valid_label(char *line,char label_array[32],int i)
+{
+  /*check if label starts with letter*/
+  if(!((label_array[0] >= 'a' && label_array[0] <= 'z')||(label_array[0] >= 'A' && label_array[0] <= 'Z')))
+  {
+    return 0;
+  }
+
+  /*check if : shows up after whitespace*/
+  if(label_array[i-1] == ' ' || label_array[i-1] == '\t')
+  {
+    return 0;
+  }
+
+  /*check if label with same name exists if it does return 0*/
+  if(label_exists(label_array))
+  {
+    return 0;
+  }
+
+  /*check if label has the same name as instruction*/
+  for(i = 0; i < 16; i++)
+  {
+    /*printf("testing: %s%d\n",label_array,i);*/
+    if(!strcmp(instructions[i].str, label_array))
+    {
+      return 0;
+    }
+  }
+
+  /*check if label has the same name as register*/
+  for(i = 0; i < 8; i++)
+  {
+    if(!strcmp(registers[i].str, label_array))
+    {
+      return 0;
+    }
+  }
+
+  /*check if label has the same name as a directive*/
+  for(i = 0; i < 4; i++)
+  {
+    if(!strcmp(directives[i].str, label_array))
+    {
+      return 0;
+    }
+  }
+
+  return 1;
+}
+
 /*check if current part of line is a label*/
 int check_label(char *line, char label_array[32])
 {
@@ -134,50 +186,14 @@ int check_label(char *line, char label_array[32])
   /*if you reach the end of the label, check if the saved label is a valid one*/
   if(*line == ':')
   {
-    /*check if label starts with letter*/
-    if(!((label_array[0] >= 'a' && label_array[0] <= 'z')||(label_array[0] >= 'A' && label_array[0] <= 'Z')))
+    if(!valid_label(line,label_array,i))
     {
       return 0;
     }
 
-    /*check if : shows up after whitespace*/
-    if(label_array[i-1] == ' ' || label_array[i-1] == '\t')
+    else
     {
-      return 0;
-    }
-
-    /*check if label with same name exists if it does return 0*/
-    if(label_exists(label_array))
-    {
-      return 0;
-    }
-
-    /*check if label has the same name as instruction*/
-    for(i = 0; i < 16; i++)
-    {
-      /*printf("testing: %s%d\n",label_array,i);*/
-      if(!strcmp(instructions[i].str, label_array))
-      {
-        return 0;
-      }
-    }
-
-    /*check if label has the same name as register*/
-    for(i = 0; i < 8; i++)
-    {
-      if(!strcmp(registers[i].str, label_array))
-      {
-        return 0;
-      }
-    }
-
-    /*check if label has the same name as a directive*/
-    for(i = 0; i < 4; i++)
-    {
-      if(!strcmp(directives[i].str, label_array))
-      {
-        return 0;
-      }
+      return 1;
     }
   }
   return 1;
@@ -216,7 +232,7 @@ int check_dir(char *line)
   }
 }
 
-
+/*function to insert data into the data array (image)*/
 int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
 {
   /*part 6 of algorithm if it is a label insert into symbol table (linked list) as .data type*/
@@ -253,16 +269,17 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
         /*check if line value is a digit*/
         if(!isdigit(*line))
         {
-          return 0;
+           return 0;
         }
 
-        /*get the value of the .data number as positive value*/
-        value = strtol(line,&line,10);
-
+        /*get the value of the .data number*/
+        value = get_num(line);
+        printf("value: %d\n",value);
         /*if number is negative get the two's complement of the positive value returned*/
         if(signFlag)
         {
           value = (~value)+1;
+          printf("value neg: %d\n",value);
         }
 
         /*insert the data into the data array table*/
@@ -297,7 +314,7 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
       /*loop until the end of the string or line*/
       while(line != NULL && *line != '\0' && *line != '"')
       {
-        printf("%c",*line);
+        /*printf("%c",*line);*/
         /*insert the string characters one by one into the data array table*/
         data_array[DC].content |= (short) *line;
         /*increment DC*/
@@ -315,8 +332,24 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
       DC++;
       break;
 
+    /*check if directive is of type .entry if so just skip it (will be handled in second pass)*/
+    case 2:
+      break;
+
+    /*check if directive type is .extern if so insert the label named after it into the label table with the type of extern and with value 0*/
+    case 3:
+
+      if(valid_label(line,label_array,0))
+      {
+        insertLabel(label_array, 4, 0);
+      }    
+      break;
+
+
     default:
       printf("Error Invalid Dir");
     }
+
   return 1;
 }
+

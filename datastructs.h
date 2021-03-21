@@ -54,6 +54,7 @@ Function Declarations
 /*From first_pass*/
 int first_pass (char *);
 int translate_line (char *,boolean,boolean, char [32]);
+int valid_label(char *line,char label_array[32],int i);
 int check_label (char *, char [32]);
 int check_dir(char *line);
 int insert_data(char *,boolean,int,char [32]);

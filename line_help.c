@@ -13,7 +13,6 @@ char *nextpart(char *line){
   }
   line++;
   line = clearspace(line);
-  printf("%c",*line);
   return line;
 }
 
@@ -56,8 +55,10 @@ void display_data()
 {
   /*loop over all the words\images saved and print them to the screen*/
   int i;
+  printf("\n");
   for(i = 0; i < DC; i++)
   {
-    printf("%d\t%X\n",i,data_array[i].content );
+    printf("%d\t%d\n",i,data_array[i].content);
   }
 }
+
