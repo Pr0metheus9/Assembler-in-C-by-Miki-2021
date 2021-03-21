@@ -114,8 +114,8 @@ int translate_line (char *line,boolean errorFlag,boolean labelFlag, char label_a
   if(check_intruction(line,opcode,funct))
   {
     line = nextpart(line);
-    /*printf("opcode: %d\tfunct: %d\n",*opcode,*funct);*/
-    /*insert_instruction(line,labelFlag);*/
+    /*for debug: printf("opcode: %d\tfunct: %d\n",*opcode,*funct);*/
+    insert_instruction(line,labelFlag,opcode,funct,label_array);
     return 0;
   }
 
@@ -442,4 +442,135 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
   return 1;
 }
 
+/*function to insert instructions*/
+int insert_instruction(char *line,boolean labelFlag,int *opcode, int *funct,char label_array[32])
+{
+  /*if there was a label before the instruction insert it to the label table with the value of the IC and type of code*/
+  int L = -1;
+  /*declares and array of 3 possible memory words (max number of words) one for each of command, source and target*/
+  Word iwords[3]; 
 
+  /*set the extra words content to some default value*/
+  iwords[0].content = 0;
+  iwords[1].content = -1;
+  iwords[2].content = -1;
+
+  if(labelFlag)
+  {
+    insertLabel(label_array, 1, IC);
+  }
+
+  /*sets the right number of operators to be given in any type of instruction part 15 of algorithm*/
+  if(*opcode <= 4)
+  {
+    L = 2;
+  }
+
+  else if(*opcode>=5 && *opcode<=13)
+  {
+    L = 1;
+  }
+
+  else if(*opcode>13)
+  {
+    L = 0;
+  }
+
+  else
+  {
+    return 0;
+  }
+
+  /*add the relevant parts into the words*/
+  line = clearspace(line);
+
+  addressfunc(iwords,L,line);
+
+  /*insert the opcode and funct*/
+  iwords[0].content |= *opcode << 8; 
+  iwords[0].content |= *funct << 4;
+  
+  /*printf("test content value: %d\n",iwords[0].content);*/
+  
+  /*for each of the words, if they exist, insert them into the instruction array and increment IC*/
+  code_array[IC-100] = iwords[0];
+  IC++;
+
+  if(!(iwords[1].content == -1))
+  {
+    code_array[IC-100] = iwords[1];
+    IC++;
+  }
+
+  if(!(iwords[2].content == -1))
+  {
+    data_array[IC-100] = iwords[2];
+    IC++;
+  }
+}
+
+/*function to insert the source and target into word if they are relevant using correct addresing type*/
+int addressfunc(Word iwords[],int L,char *line)
+{
+  int i;
+
+  /*loops where number of iterations is equal to the amount of words we will need to create*/
+  for(i = 1; i<=L; i++)
+  {
+    /*A target is requested*/
+    if(*line == ',' && i == 2)
+    {
+      line++;
+      line = clearspace(line);
+    }
+
+    /*Instant addressing (value of 0)*/ 
+    if(*line == '#')
+    {
+      boolean signFlag = False;
+      int value = 0;
+
+      /*if it is source operand set source addressing type to 0 (bits 2,3)*/
+      if(i == 1 && L == 2)
+      {
+        iwords[0].content |= 0 << 2;
+      }
+
+      /*if it is target operand set source addressing type to 0 (bits 2,3)*/
+      if(i == 2 && L == 1)
+      {
+        iwords[0].content |= 0 << 0;
+      }
+
+      line++;
+
+      /*checks if the number is positive or negative*/
+      if(*line == '-')
+      {
+        signFlag = True;
+        line++;
+      }
+
+      if(*line == '+')
+      {
+        line++;
+      }
+
+      /*get the value of the number*/
+      value = get_num(line);
+
+      /*if its negative get its two's complement counterpart*/
+      if(signFlag)
+      {
+        value = ~(value)+1;
+      }
+
+      /*create the other new word that actually contains the value of source*/ 
+      iwords[i].content = value;
+      iwords[i].are = 'A';
+      line = nextpart(line);
+      continue;
+    }
+  }
+  return 0;
+}

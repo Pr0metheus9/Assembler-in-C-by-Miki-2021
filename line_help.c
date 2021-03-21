@@ -64,3 +64,14 @@ void display_data()
   }
 }
 
+/*function to display the code types*/
+void display_code()
+{
+  /*loop over all the words\images saved and print them to the screen*/
+  int i;
+  for(i = 0; i < IC-100; i++)
+  {
+    printf("%d\t%d\n",i,code_array[i].content);
+  }
+}
+

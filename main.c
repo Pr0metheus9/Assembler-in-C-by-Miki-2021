@@ -3,8 +3,10 @@
 
 int main() {
    first_pass("test.as");
-   printf("\n");
+   printf("Display Data\n");
    display_data();
+   printf("\nDisplay Code\n");
+   display_code();
    printf("\n");
    display();
    return 0;

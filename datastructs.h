@@ -58,8 +58,9 @@ int valid_label(char [32],int);
 int check_label (char *, char [32]);
 int check_dir(char *line);
 int insert_data(char *,boolean,int,char [32]);
-int check_intruction(char *line,int *opcode,int *funct);
-int insert_instruction(char *, boolean);
+int check_intruction(char *,int *,int *);
+int insert_instruction(char *,boolean,int *,int *,char [32]);
+int addressfunc(Word [],int,char *);
 
 /*From line_help*/
 char *nextpart(char *);
@@ -71,7 +72,7 @@ void display_data();
 int label_exists(char []);
 void insertLabel(char [],int,int);
 void display();
-
+void display_code();
 
 /*=========================================================
 Variable Declarations (For vars used throughout the program)

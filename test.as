@@ -3,7 +3,8 @@
 MAIN: add r3, LIST
  lea W, r6
  mov r3, K
- sub r1, r4
+ sub #6, r2
+ mov #5,r7
 EXIT: stop 
 
 
