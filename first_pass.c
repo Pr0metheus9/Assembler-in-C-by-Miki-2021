@@ -488,13 +488,13 @@ int insert_instruction(char *line,boolean labelFlag,int *opcode, int *funct,char
   /*add the relevant parts into the words*/
   line = clearspace(line);
 
+
+  addressfunc(iwords,L,line,label_array);
+
   /*insert the opcode and funct in appropriate place in word*/
   iwords[0].content |= *opcode << 8; 
   iwords[0].content |= *funct << 4;
   iwords[0].are = 'A';
-
-  addressfunc(iwords,L,line,label_array);
-
 
   /*printf("test content value: %d\n",iwords[0].content);*/
   
@@ -616,11 +616,11 @@ int addressfunc(Word iwords[],int L,char *line, char label_array[32])
         iwords[0].are = 'A';
       }
 
-    /*if its a single command send add the value to the destination*/
+    /*if its a single command send add the value to the source*/
     else if(L == 1 && i == 1)
     {
-      iwords[0].content |= 3 << 2;
-      printf("single command reg: %d\n",iwords[0].content);
+      iwords[0].content |= 3 << 0;
+      /*printf("single command reg: %d\n",iwords[0].content);*/
       iwords[0].are = 'A';
     }
 
