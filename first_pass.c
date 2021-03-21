@@ -488,12 +488,14 @@ int insert_instruction(char *line,boolean labelFlag,int *opcode, int *funct,char
   /*add the relevant parts into the words*/
   line = clearspace(line);
 
-  addressfunc(iwords,L,line,label_array);
-
   /*insert the opcode and funct in appropriate place in word*/
   iwords[0].content |= *opcode << 8; 
   iwords[0].content |= *funct << 4;
   iwords[0].are = 'A';
+
+  addressfunc(iwords,L,line,label_array);
+
+
   /*printf("test content value: %d\n",iwords[0].content);*/
   
   /*for each of the words, if they exist, insert them into the instruction array and increment IC*/
@@ -595,44 +597,46 @@ int addressfunc(Word iwords[],int L,char *line, char label_array[32])
     /*direct register addressing (value 3)*/
     else if(*line == 'r')
     {
-       /*check if the register is one that exists*/
-       if(*(line + 1) <= 7 || *(line + 1) >= 0)
-       {
-         if(*(line+2) == ' ' || *(line+2) == '\t' || *(line+2) == ',' || line+2 == NULL || *(line+2) == '\0' || *(line+2) == '\n')
-         {  
-           int reg = 0;
-           int value = 0;
+      int reg = 0;
+      int value = 0;
 
-           /*sets addressing type to direct register addressing*/
+      /*sets addressing type to direct register addressing*/
 
-           /*if it is source operand set source addressing type to 3 (bits 2,3)*/
-           if((L == 1 || L == 2) && i == 1)
-           {
-             iwords[0].content |= 3 << 2;
-             iwords[0].are = 'A';
-           }
-           
-           /*if it is destination operand set destination addressing type to 3 (bits 2,3)*/
-           else if(L == 2 && i == 2)
-           {
-             iwords[0].content |= 3 << 0;
-             iwords[0].are = 'A';
-           }
+      /*if it is source operand set source addressing type to 3 (bits 2,3)*/
+      if(L == 2 && i == 1)
+      {
+        iwords[0].content |= 3 << 2;
+        iwords[0].are = 'A';
+      }
+      
+    /*if it is destination operand set destination addressing type to 3 (bits 2,3)*/
+    else if(L == 2 && i == 2)
+      {
+        iwords[0].content |= 3 << 0;
+        iwords[0].are = 'A';
+      }
 
-           line++;
+    /*if its a single command send add the value to the destination*/
+    else if(L == 1 && i == 1)
+    {
+      iwords[0].content |= 3 << 2;
+      printf("single command reg: %d\n",iwords[0].content);
+      iwords[0].are = 'A';
+    }
 
-           /*reg contains register value 0-7*/
-           reg = *line - '0';
-           
-           /*light up bit in place reg and set extra word to the register number*/
-           value |= 1 << reg;
-           iwords[i].content = value;
-           iwords[i].are = 'A';
-           /*printf("register number %d\tregister value: %d\n",reg,value);*/
-           line = nextpart(line);
-           continue;
-         }
-       }
+    line++;
+
+    /*reg contains register value 0-7*/
+    reg = *line - '0';
+    
+    /*light up bit in place reg and set extra word to the register number*/
+    value |= 1 << reg;
+    iwords[i].content = value;
+    iwords[i].are = 'A';
+    /*printf("register number %d\tregister value: %d\n",reg,value);*/
+    line = nextpart(line);
+    continue;
+      
     }
 
     /*direct addresing (value of 1)*/
@@ -645,13 +649,13 @@ int addressfunc(Word iwords[],int L,char *line, char label_array[32])
        }
 
        /*if it is destination operand set destination addressing type to 1 (bits 2,3)*/
-       if(L == 2 && i == 2)
+       else if(L == 2 && i == 2)
        {
          iwords[0].content |= 1 << 0;
        }
        
        /*if its a single command send add the value to the destination*/
-       if(L == 1 && i == 1)
+       else if(L == 1 && i == 1)
        {
          iwords[0].content |= 1 << 2;
        }
