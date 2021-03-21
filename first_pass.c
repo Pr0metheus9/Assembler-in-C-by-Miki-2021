@@ -639,7 +639,7 @@ int addressfunc(Word iwords[],int L,char *line, char label_array[32])
     else if (getlabelsec(line,label_array))
     {
        /*if it is source operand set source addressing type to 1 (bits 2,3)*/
-       if((L == 1 || L == 2) && i == 1)
+       if(L == 2 && i == 1)
        {
          iwords[0].content |= 1 << 2;
        }
@@ -648,6 +648,12 @@ int addressfunc(Word iwords[],int L,char *line, char label_array[32])
        if(L == 2 && i == 2)
        {
          iwords[0].content |= 1 << 0;
+       }
+       
+       /*if its a single command send add the value to the destination*/
+       if(L == 1 && i == 1)
+       {
+         iwords[0].content |= 1 << 2;
        }
 
        /*placeholder will find real value in second pass*/
