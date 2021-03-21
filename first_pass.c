@@ -1,7 +1,6 @@
 /*include datastructs/defintion file*/
 #include "datastructs.h"
 
-
 /*keywords in asm*/
 
 /*all the possible instructions*/
@@ -40,8 +39,8 @@ int first_pass (char *fileName)
     char label_array[32]; 
 
     /*create ints to store opcode and funct if line part is a instruction*/
-    int opcode;
-    int funct;
+    int opcode = 0;
+    int funct = 0;
 
     /*set initial values for IC and DC*/
     IC = 100;
@@ -58,7 +57,7 @@ int first_pass (char *fileName)
     while (fgets(line, sizeof(line), file)) 
     {
       /*call function to translate line into things we can work with each time*/
-      translate_line(line,errorFlag,labelFlag,label_array);
+      translate_line(line,errorFlag,labelFlag,label_array,&opcode,&funct);
     }
 
     /*close the file being used*/
@@ -67,7 +66,7 @@ int first_pass (char *fileName)
 }
 
 /*function to do stuff with the line and tables*/
-int translate_line (char *line,boolean errorFlag,boolean labelFlag, char label_array[32])
+int translate_line (char *line,boolean errorFlag,boolean labelFlag, char label_array[32],int *opcode,int *funct)
 {
   /*flag to tell if label was found*/
   labelFlag = False;
@@ -109,6 +108,17 @@ int translate_line (char *line,boolean errorFlag,boolean labelFlag, char label_a
     return 0;
   }
 
+  line = clearspace(line);
+
+  /*instruction check if part is an instruction. if it is then move to the next part and save to table*/ 
+  if(check_intruction(line,opcode,funct))
+  {
+    line = nextpart(line);
+    /*printf("opcode: %d\tfunct: %d\n",*opcode,*funct);*/
+    /*insert_instruction(line,labelFlag);*/
+    return 0;
+  }
+
   else
   {
     return 1;
@@ -116,7 +126,7 @@ int translate_line (char *line,boolean errorFlag,boolean labelFlag, char label_a
 }
 
 /*function to check if label is a label that can be used*/
-int valid_label(char *line,char label_array[32],int i)
+int valid_label(char label_array[32],int i)
 {
   /*check if label starts with letter*/
   if(!((label_array[0] >= 'a' && label_array[0] <= 'z')||(label_array[0] >= 'A' && label_array[0] <= 'Z')))
@@ -139,9 +149,9 @@ int valid_label(char *line,char label_array[32],int i)
   /*check if label has the same name as instruction*/
   for(i = 0; i < 16; i++)
   {
-    /*printf("testing: %s%d\n",label_array,i);*/
-    if(!strcmp(instructions[i].str, label_array))
+    if(!strncmp(instructions[i].str, label_array,4) || !strncmp(instructions[i].str, label_array,3))
     {
+      /*printf("%c%c%c\n",label_array[0],label_array[1],label_array[2]);*/
       return 0;
     }
   }
@@ -149,7 +159,7 @@ int valid_label(char *line,char label_array[32],int i)
   /*check if label has the same name as register*/
   for(i = 0; i < 8; i++)
   {
-    if(!strcmp(registers[i].str, label_array))
+    if(!strncmp(registers[i].str, label_array,2))
     {
       return 0;
     }
@@ -158,7 +168,7 @@ int valid_label(char *line,char label_array[32],int i)
   /*check if label has the same name as a directive*/
   for(i = 0; i < 4; i++)
   {
-    if(!strcmp(directives[i].str, label_array))
+    if(!strncmp(directives[i].str, label_array,4))
     {
       return 0;
     }
@@ -187,7 +197,7 @@ int check_label(char *line, char label_array[32])
 
   /*so it is saved as a string data type*/
   label_array[i]='\0';
- 
+
   if(i==0)
   {
     return 0;
@@ -196,7 +206,7 @@ int check_label(char *line, char label_array[32])
   /*if you reach the end of the label, check if the saved label is a valid one*/
   if(*line == ':' || *line == '\0')
   {
-    if(!valid_label(line,label_array,i-1))
+    if(!valid_label(label_array,i-1))
     {
       return 0;
     }
@@ -240,6 +250,78 @@ int check_dir(char *line)
   {
     return 10;
   }
+}
+
+/*check if part is a valid instruction*/
+int check_intruction(char *line,int *opcode,int *funct){
+  int i;
+  *funct = 0;
+  /*all instructions apart from instruction with opcode 15, have three letters*/
+  for(i = 0; i < 15; i++){
+    /*handling all three letter instructions*/
+    if(!strncmp(instructions[i].str, line, 3)){
+
+      *opcode = i;
+      
+      /*To handel instructions with same opcode, use different cases. In instructions which do not "share" their opcode with other instructions, index in struct of instructions is enough. (because of the way we defined instructions array*/
+
+      switch(*opcode)
+      {
+        case 2:
+          *funct = 10;
+          break;
+        
+        case 3:
+          *opcode = 2;
+          *funct = 11;
+          break;
+
+        case 5:
+          *funct = 10;
+          break;
+
+        case 6:
+          *opcode = 5;
+          *funct = 11;
+          break;
+        
+        case 7:
+          *opcode = 5;
+          *funct = 12;
+          break;
+        
+        case 8:
+          *opcode = 5;
+          *funct = 13;
+          break;
+
+        case 9:
+          *opcode = 9;
+          *funct = 10;
+          break;
+        
+        case 10:
+          *opcode = 9;
+          *funct = 11;
+          break;
+        
+        case 11:
+          *opcode = 9;
+          *funct = 12;
+          break;
+      }
+      return 1;
+    }
+  }
+
+  /*handling stop instruction, which is the only 4 letter intruction*/
+  if(!strncmp(instructions[15].str, line, 4))
+  {
+    *opcode = 15;
+    return 1;
+  }
+
+  return 0;
 }
 
 /*function to insert data into the data array (image)*/
@@ -359,4 +441,5 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
 
   return 1;
 }
+
 

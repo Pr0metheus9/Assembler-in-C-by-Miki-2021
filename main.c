@@ -3,6 +3,7 @@
 
 int main() {
    first_pass("test.as");
+   printf("\n");
    display_data();
    printf("\n");
    display();

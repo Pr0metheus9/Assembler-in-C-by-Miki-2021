@@ -1,6 +1,14 @@
-STR: .string  "abcd"
+.entry LIST
+.extern W
+MAIN: add r3, LIST
+ lea W, r6
+ mov r3, K
+ sub r1, r4
+EXIT: stop 
+
+
+STR: .string "abcd"
 LIST: .data 6, -9
  .data -100
-.entry K
 K: .data 31
-.extern val1
+.extern L3 

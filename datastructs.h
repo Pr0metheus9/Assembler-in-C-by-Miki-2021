@@ -53,11 +53,13 @@ Function Declarations
 
 /*From first_pass*/
 int first_pass (char *);
-int translate_line (char *,boolean,boolean, char [32]);
-int valid_label(char *line,char label_array[32],int i);
+int translate_line (char *,boolean,boolean, char [32],int *,int *);
+int valid_label(char [32],int);
 int check_label (char *, char [32]);
 int check_dir(char *line);
 int insert_data(char *,boolean,int,char [32]);
+int check_intruction(char *line,int *opcode,int *funct);
+int insert_instruction(char *, boolean);
 
 /*From line_help*/
 char *nextpart(char *);
