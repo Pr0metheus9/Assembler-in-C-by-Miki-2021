@@ -583,7 +583,46 @@ int addressfunc(Word iwords[],int L,char *line)
       iwords[i].are = 'A';
       continue;
     }
-   
+
+    /*direct register addressing (value 3)*/
+    else if(*line == 'r')
+    {
+       /*check if the register is one that exists*/
+       if(*(line + 1) <= 7 || *(line + 1) >= 0)
+       {
+         if(*(line+2) == ' ' || *(line+2) == '\t' || *(line+2) == ',' || line+2 == NULL || *(line+2) == '\0' || *(line+2) == '\n')
+         {  
+           int reg;
+           int value = 0;
+
+           /*sets addressing type to direct register addressing*/
+
+           /*if it is source operand set source addressing type to 3 (bits 2,3)*/
+           if(i == 1 && L == 2)
+           {
+             iwords[0].content |= 3 << 2;
+           }
+           
+           /*if it is destination operand set destination addressing type to 3 (bits 2,3)*/
+           else if(i == 2 && L == 1)
+           {
+             iwords[0].content |= 3 << 0;
+           }
+
+           line++;
+
+           /*reg contains register value 0-7*/
+           reg = *line - '0';
+           
+           /*light up bit in place reg and set extra word to the register number*/
+           value |= 1 << reg;
+           iwords[i].content = value;
+
+           line = nextpart(line);
+           continue;
+         }
+       }
+    }
   }
   return 0;
 }
