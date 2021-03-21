@@ -625,6 +625,31 @@ int addressfunc(Word iwords[],int L,char *line)
          }
        }
     }
+
+    /*direct addresing (value of 1)*/
+    else
+    {
+       /*if it is source operand set source addressing type to 1 (bits 2,3)*/
+       if(i == 1 && L == 2)
+       {
+         iwords[0].content |= 1 << 2;
+       }
+
+       /*if it is destination operand set destination addressing type to 1 (bits 2,3)*/
+       else if(i == 2 && L == 1)
+       {
+         iwords[0].content |= 1 << 0;
+       }
+
+       /*will add extern handler later*/
+       iwords[0].are = 'R';
+
+       /*leaves space for word to be filled in the second scan*/
+       iwords[i].content = 0;
+       line = nextpart(line);
+       continue;
+    }
   }
   return 0;
 }
+
