@@ -507,6 +507,7 @@ int insert_instruction(char *line,boolean labelFlag,int *opcode, int *funct,char
     data_array[IC-100] = iwords[2];
     IC++;
   }
+  return 1;
 }
 
 /*function to insert the source and target into word if they are relevant using correct addresing type*/
@@ -641,8 +642,8 @@ int addressfunc(Word iwords[],int L,char *line)
          iwords[0].content |= 1 << 0;
        }
 
-       /*will add extern handler later*/
-       iwords[0].are = 'R';
+       /*placeholder will find real value in second pass*/
+       iwords[0].are = 'F';
 
        /*leaves space for word to be filled in the second scan*/
        iwords[i].content = 0;
