@@ -582,8 +582,8 @@ int addressfunc(Word iwords[],int L,char *line, char label_array[32])
     /*relative addressing (value 2)*/
     else if(*line == '%')
     {
-      /*relative addressing has only a source and not a destination*/
-      iwords[0].content |= 2 << 2;
+      /*relative addressing has only a destination and not a source*/
+      iwords[0].content |= 2 << 0;
       iwords[0].are = '?';
 
       /*make empty space for the label address in future (can't be -1 cause we already have that as default for iwords[1,2]*/
