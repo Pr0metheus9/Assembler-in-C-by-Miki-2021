@@ -69,10 +69,11 @@ int first_pass (char *fileName)
 /*function to do stuff with the line and tables*/
 int translate_line (char *line,boolean errorFlag,boolean labelFlag, char label_array[32])
 {
+  /*flag to tell if label was found*/
   labelFlag = False;
 
   /*check if the line is of comment or whitespace type if so we can just skip it*/
-  if(*line == ';' || line == NULL || *line == '\n' || *line == '\0')
+  if(*line == ';')
   {
     return 0;
   }
@@ -81,6 +82,12 @@ int translate_line (char *line,boolean errorFlag,boolean labelFlag, char label_a
   if(*line == ' ' || *line == '\t')
   {
     line = clearspace(line);
+  }
+
+  
+  if(line == NULL || *line == '\n' || *line == '\0')
+  {
+    return 0;
   }
 
   /*check if it is a label if so set the label flag to true (following algorithm) and move to the next part of the line*/
@@ -93,6 +100,11 @@ int translate_line (char *line,boolean errorFlag,boolean labelFlag, char label_a
   /*remove whitespace from the line to make it easily readable*/
   line = clearspace(line);
 
+  if(*line == '-')
+  {
+    line++;
+    printf("%c",*line);
+  }
   /*Check if part could be a directive. if it is a valid directive, save to the word table and continue*/
   if(*line == '.')
   {
@@ -274,12 +286,11 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
 
         /*get the value of the .data number*/
         value = get_num(line);
-        printf("value: %d\n",value);
+
         /*if number is negative get the two's complement of the positive value returned*/
         if(signFlag)
         {
           value = (~value)+1;
-          printf("value neg: %d\n",value);
         }
 
         /*insert the data into the data array table*/
@@ -289,7 +300,7 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
         line++;
         line = clearspace(line);
         line = nextpart(line);
-
+        
         /*if you reached the end*/
         if(line == NULL || *line == '\0')
         {

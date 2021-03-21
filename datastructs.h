@@ -71,8 +71,6 @@ void insertLabel(char [],int,int);
 void display();
 
 
-
-
 /*=========================================================
 Variable Declarations (For vars used throughout the program)
 ==========================================================*/
