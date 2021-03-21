@@ -60,7 +60,7 @@ void display_data()
   int i;
   for(i = 0; i < DC; i++)
   {
-    printf("%d\t%d\t%c\n",i+IC,data_array[i].content,data_array[i].are);
+    printf("%-8d%-8d%-8c\n",i+IC,data_array[i].content,data_array[i].are);
   }
 }
 
@@ -71,7 +71,7 @@ void display_code()
   int i;
   for(i = 0; i < IC-100; i++)
   {
-    printf("%d\t%d\t%c\n",i+100,code_array[i].content,code_array[i].are);
+    printf("%-8d%-8d%-8c\n",i+100,code_array[i].content,code_array[i].are);
   }
 }
 

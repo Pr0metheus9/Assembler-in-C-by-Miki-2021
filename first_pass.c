@@ -257,7 +257,8 @@ int check_intruction(char *line,int *opcode,int *funct){
   int i;
   *funct = 0;
   /*all instructions apart from instruction with opcode 15, have three letters*/
-  for(i = 0; i < 15; i++){
+  for(i = 0; i < 15; i++)
+  {
     /*handling all three letter instructions*/
     if(!strncmp(instructions[i].str, line, 3)){
 
@@ -628,7 +629,6 @@ int addressfunc(Word iwords[],int L,char *line)
            iwords[i].content = value;
            iwords[i].are = 'A';
            /*printf("register number %d\tregister value: %d\n",reg,value);*/
-
            line = nextpart(line);
            continue;
          }
