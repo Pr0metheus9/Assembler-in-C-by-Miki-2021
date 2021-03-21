@@ -492,7 +492,7 @@ int insert_instruction(char *line,boolean labelFlag,int *opcode, int *funct,char
   /*insert the opcode and funct in appropriate place in word*/
   iwords[0].content |= *opcode << 8; 
   iwords[0].content |= *funct << 4;
-
+  iwords[0].are = 'A';
   /*printf("test content value: %d\n",iwords[0].content);*/
   
   /*for each of the words, if they exist, insert them into the instruction array and increment IC*/
@@ -599,7 +599,7 @@ int addressfunc(Word iwords[],int L,char *line)
        {
          if(*(line+2) == ' ' || *(line+2) == '\t' || *(line+2) == ',' || line+2 == NULL || *(line+2) == '\0' || *(line+2) == '\n')
          {  
-           int reg;
+           int reg = 0;
            int value = 0;
 
            /*sets addressing type to direct register addressing*/
