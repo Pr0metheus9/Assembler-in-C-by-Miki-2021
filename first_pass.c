@@ -657,7 +657,7 @@ int addressfunc(Word iwords[],int L,char *line, char label_array[32])
        /*if its a single command send add the value to the destination*/
        else if(L == 1 && i == 1)
        {
-         iwords[0].content |= 1 << 2;
+         iwords[0].content |= 1 << 0;
        }
 
        /*placeholder will find real value in second pass*/
