@@ -330,7 +330,7 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
   /*part 6 of algorithm if it is a label insert into symbol table (linked list) as .data type*/
   if(labelFlag)
   {
-    insertLabel(label_array,0,DC);
+    insertLabel(label_array,0,DC+IC);
   }
 
   /*parts 7+8 of algorithm*/
