@@ -75,3 +75,35 @@ void display_code()
   }
 }
 
+
+/*============================================
+finds an section which is a label and sets the global variable of label to it
+if no label section is found return 0
+=============================================*/
+int getlabelsec(char *line, char label_array[32]){
+  
+  int i = 0;
+  
+  /*loop though untill the end of the label*/
+  while(*line != ',' && *line != ' ' && *line != '\n' && *line != '\t'){
+    /*check if length if fine*/
+    if(i > 31)
+    {
+      return 0;
+    }
+    
+    label_array[i] = *line;
+    i++;
+    line++;
+  }
+  
+  /*add '\0' at the end of the label to signify the end of a string*/
+  label_array[i]='\0';
+  
+  /*if the length of the label is 0, no label was found return an error*/
+  if(i==0)
+    return 0;
+
+  else
+    return 1;
+}

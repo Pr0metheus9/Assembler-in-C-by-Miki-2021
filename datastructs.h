@@ -60,19 +60,21 @@ int check_dir(char *line);
 int insert_data(char *,boolean,int,char [32]);
 int check_intruction(char *,int *,int *);
 int insert_instruction(char *,boolean,int *,int *,char [32]);
-int addressfunc(Word [],int,char *);
+int addressfunc(Word [],int,char *,char [32]);
 
 /*From line_help*/
 char *nextpart(char *);
 char *clearspace(char *);
 int get_num(char *);
+int getlabelsec(char *, char [32]);
+void display_code();
 void display_data();
 
 /*from linked_list*/
 int label_exists(char []);
 void insertLabel(char [],int,int);
 void display();
-void display_code();
+
 
 /*=========================================================
 Variable Declarations (For vars used throughout the program)

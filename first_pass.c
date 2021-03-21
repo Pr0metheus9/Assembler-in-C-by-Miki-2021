@@ -488,7 +488,7 @@ int insert_instruction(char *line,boolean labelFlag,int *opcode, int *funct,char
   /*add the relevant parts into the words*/
   line = clearspace(line);
 
-  addressfunc(iwords,L,line);
+  addressfunc(iwords,L,line,label_array);
 
   /*insert the opcode and funct in appropriate place in word*/
   iwords[0].content |= *opcode << 8; 
@@ -515,7 +515,7 @@ int insert_instruction(char *line,boolean labelFlag,int *opcode, int *funct,char
 }
 
 /*function to insert the source and target into word if they are relevant using correct addresing type*/
-int addressfunc(Word iwords[],int L,char *line)
+int addressfunc(Word iwords[],int L,char *line, char label_array[32])
 {
   int i;
 
@@ -536,14 +536,14 @@ int addressfunc(Word iwords[],int L,char *line)
       int value = 0;
 
       /*if it is source operand set source addressing type to 0 (bits 2,3)*/
-      if(i == 1 && L == 2)
+      if((L == 1 || L == 2) && i == 1)
       {
         iwords[0].content |= 0 << 2;
         iwords[0].are = 'A';
       }
 
       /*if it is target operand set source addressing type to 0 (bits 2,3)*/
-      if(i == 2 && L == 1)
+      if(L == 2 && i == 2)
       {
         iwords[0].content |= 0 << 0;
         iwords[0].are = 'A';
@@ -606,14 +606,14 @@ int addressfunc(Word iwords[],int L,char *line)
            /*sets addressing type to direct register addressing*/
 
            /*if it is source operand set source addressing type to 3 (bits 2,3)*/
-           if(i == 1 && L == 2)
+           if((L == 1 || L == 2) && i == 1)
            {
              iwords[0].content |= 3 << 2;
              iwords[0].are = 'A';
            }
            
            /*if it is destination operand set destination addressing type to 3 (bits 2,3)*/
-           else if(i == 2 && L == 1)
+           else if(L == 2 && i == 2)
            {
              iwords[0].content |= 3 << 0;
              iwords[0].are = 'A';
@@ -636,16 +636,16 @@ int addressfunc(Word iwords[],int L,char *line)
     }
 
     /*direct addresing (value of 1)*/
-    else
+    else if (getlabelsec(line,label_array))
     {
        /*if it is source operand set source addressing type to 1 (bits 2,3)*/
-       if(i == 1 && L == 2)
+       if((L == 1 || L == 2) && i == 1)
        {
          iwords[0].content |= 1 << 2;
        }
 
        /*if it is destination operand set destination addressing type to 1 (bits 2,3)*/
-       else if(i == 2 && L == 1)
+       if(L == 2 && i == 2)
        {
          iwords[0].content |= 1 << 0;
        }
