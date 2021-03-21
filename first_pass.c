@@ -373,7 +373,8 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
         }
 
         /*insert the data into the data array table*/
-        data_array[DC].content |= value;  
+        data_array[DC].content |= value;
+        data_array[DC].are = 'A';  
         /*increment DC*/
         DC++;
         line++;
@@ -407,6 +408,7 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
         /*printf("%c",*line);*/
         /*insert the string characters one by one into the data array table*/
         data_array[DC].content |= (short) *line;
+        data_array[DC].are = 'A';
         /*increment DC*/
         DC++;
         line++;
@@ -419,6 +421,7 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
 
       /*add a '\0' at the end of the string in the data array*/
       data_array[DC].content |= 0;
+      data_array[DC].are = 'A';
       DC++;
       break;
 
@@ -504,7 +507,7 @@ int insert_instruction(char *line,boolean labelFlag,int *opcode, int *funct,char
 
   if(!(iwords[2].content == -1))
   {
-    data_array[IC-100] = iwords[2];
+    code_array[IC-100] = iwords[2];
     IC++;
   }
   return 1;
@@ -535,12 +538,14 @@ int addressfunc(Word iwords[],int L,char *line)
       if(i == 1 && L == 2)
       {
         iwords[0].content |= 0 << 2;
+        iwords[0].are = 'A';
       }
 
       /*if it is target operand set source addressing type to 0 (bits 2,3)*/
       if(i == 2 && L == 1)
       {
         iwords[0].content |= 0 << 0;
+        iwords[0].are = 'A';
       }
 
       line++;
@@ -578,6 +583,7 @@ int addressfunc(Word iwords[],int L,char *line)
     {
       /*relative addressing has only a source and not a destination*/
       iwords[0].content |= 2 << 2;
+      iwords[0].are = '?';
 
       /*make empty space for the label address in future (can't be -1 cause we already have that as default for iwords[1,2]*/
       iwords[i].content = 0;
@@ -602,12 +608,14 @@ int addressfunc(Word iwords[],int L,char *line)
            if(i == 1 && L == 2)
            {
              iwords[0].content |= 3 << 2;
+             iwords[0].are = 'A';
            }
            
            /*if it is destination operand set destination addressing type to 3 (bits 2,3)*/
            else if(i == 2 && L == 1)
            {
              iwords[0].content |= 3 << 0;
+             iwords[0].are = 'A';
            }
 
            line++;
@@ -643,10 +651,11 @@ int addressfunc(Word iwords[],int L,char *line)
        }
 
        /*placeholder will find real value in second pass*/
-       iwords[0].are = 'F';
+       iwords[0].are = '?';
 
        /*leaves space for word to be filled in the second scan*/
        iwords[i].content = 0;
+       iwords[i].are = '?';
        line = nextpart(line);
        continue;
     }
