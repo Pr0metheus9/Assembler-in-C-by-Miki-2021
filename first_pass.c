@@ -187,14 +187,14 @@ int check_label(char *line, char label_array[32])
 
   /*so it is saved as a string data type*/
   label_array[i]='\0';
-
+ 
   if(i==0)
   {
     return 0;
   }
 
   /*if you reach the end of the label, check if the saved label is a valid one*/
-  if(*line == ':')
+  if(*line == ':' || *line == '\0')
   {
     if(!valid_label(line,label_array,i-1))
     {
@@ -256,7 +256,6 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
   {    
     /*check if directive type is .data if so add to data array*/
     case 0:
-
       /*loop until the end of the data or line*/
       while(line != NULL && *line != '\0' && *line != ' ' &&  *line != '\t' &&  *line != '\n')
       {
@@ -347,10 +346,9 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
 
     /*check if directive type is .extern if so insert the label named after it into the label table with the type of extern and with value 0*/
     case 3:
-
-      if(valid_label(line,label_array,0))
+      if(check_label(line,label_array))
       {
-        insertLabel(label_array, 4, 0);
+        insertLabel(label_array, 3, 0);
       }    
       break;
 

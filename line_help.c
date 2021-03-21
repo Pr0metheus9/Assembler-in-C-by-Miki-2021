@@ -56,7 +56,6 @@ void display_data()
 {
   /*loop over all the words\images saved and print them to the screen*/
   int i;
-  printf("\n");
   for(i = 0; i < DC; i++)
   {
     printf("%d\t%d\n",i,data_array[i].content);

@@ -2,8 +2,8 @@
 #include "datastructs.h"
 
 /*add new node to linked list*/
-void insertLabel(char label[],int attribute, int value){
-
+void insertLabel(char label[],int attribute, int value)
+{
   /*create new label pointer to the new label we want to add*/     
   Label* new_Label;
 
@@ -44,7 +44,8 @@ void insertLabel(char label[],int attribute, int value){
 }
 
 /*check if the label already exists in the linked list*/
-int label_exists(char label[]){
+int label_exists(char label[])
+{
   /*create temp label so that we can cycle over all the nodes and initialize at first item (head)*/ 
   Label *temp;
   temp = head;
@@ -67,10 +68,9 @@ void display()
 {
     Label *temp;
     temp = head;
-    printf("\n");
     while(temp != NULL)
     {
-      printf("%s\t%d\t%d\n",temp->name,temp->value,temp->attribute);
+      printf("%-8s%-8d%-8d\n",temp->name,temp->value,temp->attribute);
       temp=temp->next;
     }
 }
