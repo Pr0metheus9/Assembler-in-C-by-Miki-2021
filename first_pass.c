@@ -100,11 +100,6 @@ int translate_line (char *line,boolean errorFlag,boolean labelFlag, char label_a
   /*remove whitespace from the line to make it easily readable*/
   line = clearspace(line);
 
-  if(*line == '-')
-  {
-    line++;
-    printf("%c",*line);
-  }
   /*Check if part could be a directive. if it is a valid directive, save to the word table and continue*/
   if(*line == '.')
   {

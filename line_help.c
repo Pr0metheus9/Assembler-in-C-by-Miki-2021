@@ -18,7 +18,8 @@ char *nextpart(char *line){
 
 /*remove the whitespace (skip it) by moving the line every time and checking if it is pointing to a whitespace.*/
 char *clearspace(char *line){
-  while(*line==' ' || *line=='\t'){
+  while(*line==' ' || *line=='\t')
+  {
     if(*line == '\0')
     {
       break;
