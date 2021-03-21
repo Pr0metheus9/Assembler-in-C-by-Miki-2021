@@ -310,7 +310,7 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
 
     /*check if directive type is .string if so add to data array*/
     case 1:
-
+  
       if(*line != '"')
       {
         return 0;
@@ -320,7 +320,7 @@ int insert_data(char *line, boolean labelFlag, int type, char label_array[32])
       line++;
 
       /*loop until the end of the string or line*/
-      while(line != NULL && *line != '\0' && *line != '"')
+      while(line!=NULL && *line != '"' && *line != '\0')
       {
         /*printf("%c",*line);*/
         /*insert the string characters one by one into the data array table*/
