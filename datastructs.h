@@ -81,6 +81,7 @@ Label* get_label(char label[]);
 /*From second_pass*/
 int second_pass (char *fileName);
 int translate_line2 (char *line,boolean errorFlag,boolean labelFlag, char label_array[32],int *opcode,int *funct);
+int complete_instruction(char *line,boolean labelFlag,int *opcode, int *funct,char label_array[32]);
 
 /*=========================================================
 Variable Declarations (For vars used throughout the program)

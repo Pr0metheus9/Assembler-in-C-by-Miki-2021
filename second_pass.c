@@ -76,7 +76,7 @@ int translate_line2 (char *line,boolean errorFlag,boolean labelFlag, char label_
   /*remove whitespace from the line to make it easily readable*/
   line = clearspace(line);
 
-  /*Check if part could be a directive. if it is a valid directive, save to the word table and continue*/
+  /*Check if part could be a directive. if it is a valid directive*/
   if(*line == '.')
   {
     int type = check_dir(line);
@@ -103,16 +103,22 @@ int translate_line2 (char *line,boolean errorFlag,boolean labelFlag, char label_
 
   line = clearspace(line);
 
-  /*instruction check if part is an instruction. if it is then move to the next part and save to table*/ 
-  /*if(check_intruction(line,opcode,funct))
+  /*instruction check if part is an instruction.*/ 
+  if(check_intruction(line,opcode,funct))
   {
     line = nextpart(line);
-    insert_instruction(line,labelFlag,opcode,funct,label_array);
+    complete_instruction(line,labelFlag,opcode,funct,label_array);
     return 0;
   }
 
   else
   {
     return 1;
-  }*/
+  }
+}
+
+/*function to complete the missing parts in the instruction array (step 6 of algorithm)*/
+int complete_instruction(char *line,boolean labelFlag,int *opcode, int *funct,char label_array[32])
+{
+  return 0;
 }
