@@ -14,6 +14,9 @@
 New Structures we will need
 =========================*/
 
+/*define boolean variable for ease of use*/
+typedef enum { False, True } boolean; 
+
 /*Helps to create linked list for labels*/
 typedef struct Node  
 { 
@@ -21,6 +24,8 @@ typedef struct Node
     char  name [32];
     /*0.data, 1.code, 2.extern, 3.entry*/  
     int  attribute;
+    /*int to check if attribute also has entry type*/
+    int isEntry;
     /*Label Word Place in File*/ 
     int value;
     /*pointer to next label type declared so we get a linked list node --> next node --> next next node and so on.... */ 
@@ -43,9 +48,6 @@ typedef struct keyword {
     /*name of keyword / keyword title*/
     char *str; 
 } keyword;
-
-/*define boolean variable for ease of use*/
-typedef enum { False, True } boolean; 
 
 /*===================
 Function Declarations
@@ -74,7 +76,11 @@ void display_data();
 int label_exists(char []);
 void insertLabel(char [],int,int);
 void display();
+Label* get_label(char label[]);
 
+/*From second_pass*/
+int second_pass (char *fileName);
+int translate_line2 (char *line,boolean errorFlag,boolean labelFlag, char label_array[32],int *opcode,int *funct);
 
 /*=========================================================
 Variable Declarations (For vars used throughout the program)
@@ -91,6 +97,10 @@ Word data_array [RAM_SIZE/4];
 /*add counters as global variables*/
 int IC; 
 int DC; 
+int tIC;
+int tDC;
+int ICF;
+int DCF;
 
 /*make keyword arrays*/
 keyword instructions[16];

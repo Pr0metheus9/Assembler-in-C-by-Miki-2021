@@ -60,8 +60,14 @@ int first_pass (char *fileName)
       translate_line(line,errorFlag,labelFlag,label_array,&opcode,&funct);
     }
 
+    /*save values of IC and DC after end of first pass*/
+    ICF = IC;
+    DCF = DC;
+
     /*close the file being used*/
     fclose(file); 
+
+    second_pass(fileName);
     return 1;
 }
 
@@ -608,35 +614,34 @@ int addressfunc(Word iwords[],int L,char *line, char label_array[32])
         iwords[0].content |= 3 << 2;
         iwords[0].are = 'A';
       }
-      
-    /*if it is destination operand set destination addressing type to 3 (bits 2,3)*/
-    else if(L == 2 && i == 2)
+        
+      /*if it is destination operand set destination addressing type to 3 (bits 2,3)*/
+      else if(L == 2 && i == 2)
       {
         iwords[0].content |= 3 << 0;
         iwords[0].are = 'A';
       }
 
-    /*if its a single command send add the value to the source*/
-    else if(L == 1 && i == 1)
-    {
-      iwords[0].content |= 3 << 0;
-      /*printf("single command reg: %d\n",iwords[0].content);*/
-      iwords[0].are = 'A';
-    }
+      /*if its a single command send add the value to the source*/
+      else if(L == 1 && i == 1)
+      {
+        iwords[0].content |= 3 << 0;
+        /*printf("single command reg: %d\n",iwords[0].content);*/
+        iwords[0].are = 'A';
+      }
 
-    line++;
+      line++;
 
-    /*reg contains register value 0-7*/
-    reg = *line - '0';
-    
-    /*light up bit in place reg and set extra word to the register number*/
-    value |= 1 << reg;
-    iwords[i].content = value;
-    iwords[i].are = 'A';
-    /*printf("register number %d\tregister value: %d\n",reg,value);*/
-    line = nextpart(line);
-    continue;
+      /*reg contains register value 0-7*/
+      reg = *line - '0';
       
+      /*light up bit in place reg and set extra word to the register number*/
+      value |= 1 << reg;
+      iwords[i].content = value;
+      iwords[i].are = 'A';
+      /*printf("register number %d\tregister value: %d\n",reg,value);*/
+      line = nextpart(line);
+      continue;
     }
 
     /*direct addresing (value of 1)*/
@@ -672,4 +677,3 @@ int addressfunc(Word iwords[],int L,char *line, char label_array[32])
   }
   return 0;
 }
-

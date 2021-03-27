@@ -63,6 +63,23 @@ int label_exists(char label[])
   return 0;
 }
 
+Label* get_label(char label[])
+{
+  /*check if label name already exists*/ 
+  Label *temp;
+  temp = head;
+  
+  while(temp != NULL)
+  {
+    if(strcmp(label,temp->name) == 0)
+      {
+        return temp;
+      }
+    temp=temp->next;
+  }
+  return NULL; /*label not found*/
+}
+
 /*function to display symbol table / linked list on screen*/
 void display()
 {
@@ -70,7 +87,16 @@ void display()
     temp = head;
     while(temp != NULL)
     {
-      printf("%-8s%-8d%-8d\n",temp->name,temp->value,temp->attribute);
+      if(temp -> isEntry == 1)
+      {
+        printf("%-8s%-8d%-8d%-1s\n",temp->name,temp->value,temp->attribute,"entry");
+      }
+
+      else
+      {
+        printf("%-8s%-8d%-8d\n",temp->name,temp->value,temp->attribute);
+      }
+
       temp=temp->next;
     }
 }

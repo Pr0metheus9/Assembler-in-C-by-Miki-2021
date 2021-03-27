@@ -60,7 +60,7 @@ void display_data()
   int i;
   for(i = 0; i < DC; i++)
   {
-    printf("%-8d%-8d%-8c\n",i+IC,data_array[i].content,data_array[i].are);
+    printf("%-8d%-8d%-8c\n",i+ICF,data_array[i].content,data_array[i].are);
   }
 }
 
@@ -77,7 +77,7 @@ void display_code()
 
 
 /*============================================
-finds an section which is a label and sets the global variable of label to it
+finds an section which is a label and sets the variable of label_array to it
 if no label section is found return 0
 =============================================*/
 int getlabelsec(char *line, char label_array[32]){
