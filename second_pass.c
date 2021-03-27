@@ -80,7 +80,7 @@ int translate_line2 (char *line,boolean errorFlag,boolean labelFlag, char label_
   if(*line == '.')
   {
     int type = check_dir(line);
-    /*check if the directive is of the entry type*/
+    /*check if the directive is of the entry type (step 4 of algorithm). if not then return 0 (step 3 of algorithm)*/
     if(type != 2)
     {
       return 0;
@@ -94,7 +94,7 @@ int translate_line2 (char *line,boolean errorFlag,boolean labelFlag, char label_
       {
         if(label_exists(label_array))
         {
-          /*if so add the entry type to the current type of the label*/
+          /*if so add the entry type to the current type of the label (step 5 of algorithm)*/
           get_label(label_array) -> isEntry = 1;
         }
       }
