@@ -180,7 +180,7 @@ int complete_instruction(char *line,boolean labelFlag,int *opcode, int *funct,ch
 
       else
       {
-        are = 'R';
+        are = 'A';
       }
 
       /*insert the value into the code_array*/
