@@ -1,15 +1,13 @@
-/*Pr0metheus9*/
+/*Pr0metheus9 - Miki*/
 /*include datastructs/defintion file*/
 #include "datastructs.h"
 
-int main()
+int main(int argc, char *argv[])
 {
-    first_pass("test.as");
-    printf("Display Data\n");
-    display_data();
-    printf("\nDisplay Code\n");
-    display_code();
-    printf("\n");
-    display();
-    return 0;
+  int i;
+  for(i = 1; i < argc; i++)
+  {
+    first_pass(argv[i]);
+  }
+  return 0;
 }

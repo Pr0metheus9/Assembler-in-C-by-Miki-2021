@@ -20,12 +20,12 @@ functions to translate
 we will use algorithm for two pass assembler*/
 int first_pass(char* fileName)
 {
-    /* open the file and save file pointer */
-    FILE* file = fopen(fileName, "r");
-
+    /*create file pointer*/
+    FILE* file;
     /*create char to save current line content. max size for a line is 500 chars*/
     char line[501];
-
+    /*add ending as to filename*/
+    char fileAs[32];
     /*create flags and set initial value of flags to false*/
     boolean errorFlag = False;
     boolean labelFlag = False;
@@ -41,9 +41,16 @@ int first_pass(char* fileName)
     IC = 100;
     DC = 0;
 
+    strcpy(fileAs, fileName);
+    strcat(fileAs, ".as");
+
+    /* open the file and save file pointer */
+    file = fopen(fileAs, "r");
+
     /*Check if the file cannot be opened, if so print error to screen */
     if (file == NULL)
     {
+        printf("filename: %s\n",fileAs);
         printf("Error: File Cannot Open");
         exit(1);
     }
@@ -446,6 +453,7 @@ int insert_data(char* line, boolean labelFlag, int type, char label_array[32])
         /*check if directive is of type .entry if so just skip it (will be handled
          * in second pass)*/
         case 2:
+            existsEnt = True;
             break;
 
         /*check if directive type is .extern if so insert the label named after it
@@ -453,6 +461,7 @@ int insert_data(char* line, boolean labelFlag, int type, char label_array[32])
         case 3:
             if (check_label(line, label_array))
             {
+                existsExt = True;
                 insertLabel(label_array, 3, 0);
             }
             break;

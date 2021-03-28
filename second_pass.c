@@ -3,12 +3,15 @@
 
 int second_pass(char* fileName)
 {
-    /* open the file and save file pointer */
-    FILE* file = fopen(fileName, "r");
+    /*create file pointer*/
+    FILE* file;
 
     /*create char to save current line content. max size for a line is 500 chars*/
     char line[501];
 
+    /*string to hold filename with the ending as*/
+    char fileAs[32];
+    
     /*create flags and set initial value of flags to false*/
     boolean errorFlag = False;
     boolean labelFlag = False;
@@ -24,6 +27,13 @@ int second_pass(char* fileName)
     tIC = 100;
     tDC = 0;
 
+    /*adds .as to the end of the filename*/
+    strcpy(fileAs, fileName);
+    strcat(fileAs, ".as");
+
+    /* open the file and save file pointer */
+    file = fopen(fileAs, "r");
+
     /*Check if the file cannot be opened, if so print error to screen */
     if (file == NULL)
     {
@@ -37,6 +47,23 @@ int second_pass(char* fileName)
         /*call function to translate line into things we can work with each time*/
         translate_line2(line, errorFlag, labelFlag, label_array, &opcode, &funct);
     }
+
+    /*create output files*/
+
+    /*create object file*/
+    write_obj(fileName);
+    
+    /*if entry labels exist then create the entry file*/
+    if(existsEnt)
+    {
+      write_ent(fileName);
+    }
+
+    /*if external labels exist then create the external file*/
+    if(existsExt)
+    {
+      write_ext(fileName);
+    } 
 
     /*close the file being used*/
     fclose(file);
@@ -180,11 +207,16 @@ int complete_instruction(
                 content = ~(-dist) + 1;
             }
 
+            /*If label is extern than change are to extern type*/
             if (get_label(label_array)->attribute == 3)
             {
                 are = 'E';
+                ext_labels[ext_num].address = tIC;
+                strcpy(ext_labels[ext_num].label ,label_array);
+                ext_num++;
             }
 
+            /*If it's not than for relative addressing change to A*/
             else
             {
                 are = 'A';
@@ -229,11 +261,16 @@ int complete_instruction(
                 /*inserts the IC of the label into the word*/
                 content = targetIC;
 
+                /*If label is extern than set it as such*/
                 if (templabel->attribute == 3)
                 {
                     are = 'E';
+                    ext_labels[ext_num].address = tIC;
+                    strcpy(ext_labels[ext_num].label ,label_array);
+                    ext_num++;
                 }
 
+                /*If label is not extern than for direct addressing set to relative*/
                 else
                 {
                     are = 'R';
