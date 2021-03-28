@@ -57,11 +57,13 @@ typedef struct keyword
     char* str;
 } keyword;
 
-/*create a struct for ext file output and create global array of external labels using default number of 100 uses*/
-struct ext_label{
-  int address;
-  char label[32];
-}ext_labels[100];
+/*create a struct for ext file output and create global array of external labels using default
+ * number of 100 uses*/
+struct ext_label
+{
+    int address;
+    char label[32];
+} ext_labels[100];
 
 /*===================
 Function Declarations
@@ -102,9 +104,12 @@ int complete_instruction(
 int check_label2(char* line, char label_array[32]);
 
 /*From write_files*/
-void write_obj(char *filename);
-void write_ent(char *filename);
-void write_ext(char *filename);
+void write_obj(char* filename);
+void write_ent(char* filename);
+void write_ext(char* filename);
+
+/*From error handler*/
+void write_error(int error);
 
 /*=========================================================
 Variable Declarations (For vars used throughout the program)
@@ -126,11 +131,14 @@ int tIC;
 int tDC;
 int ICF;
 int DCF;
+int LC;
 /*global variables to check if any external or entry labels exists (Make for the output files)*/
 boolean existsExt;
 boolean existsEnt;
 /*global variable to keep track of number of external occurrences*/
 int ext_num;
+/*global variable to check if an error exists*/
+int error;
 /*make keyword arrays*/
 keyword instructions[16];
 keyword directives[4];

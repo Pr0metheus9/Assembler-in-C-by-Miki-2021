@@ -95,6 +95,8 @@ int getlabelsec(char* line, char label_array[32])
         /*check if length if fine*/
         if (i > 31)
         {
+            write_error(5);
+            error++;
             return 0;
         }
 

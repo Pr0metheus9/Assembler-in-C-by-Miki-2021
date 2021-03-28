@@ -40,6 +40,8 @@ int first_pass(char* fileName)
     /*set initial values for IC and DC*/
     IC = 100;
     DC = 0;
+    LC = 1;
+    error = 0;
 
     strcpy(fileAs, fileName);
     strcat(fileAs, ".as");
@@ -50,8 +52,9 @@ int first_pass(char* fileName)
     /*Check if the file cannot be opened, if so print error to screen */
     if (file == NULL)
     {
-        printf("filename: %s\n",fileAs);
-        printf("Error: File Cannot Open");
+        error++;
+        printf("filename: %s\n", fileAs);
+        write_error(14);
         exit(1);
     }
 
@@ -60,6 +63,7 @@ int first_pass(char* fileName)
     {
         /*call function to translate line into things we can work with each time*/
         translate_line(line, errorFlag, labelFlag, label_array, &opcode, &funct);
+        LC++;
     }
 
     /*save values of IC and DC after end of first pass*/
@@ -69,7 +73,11 @@ int first_pass(char* fileName)
     /*close the file being used*/
     fclose(file);
 
-    second_pass(fileName);
+    if (error == 0)
+    {
+        second_pass(fileName);
+    }
+
     return 1;
 }
 
@@ -133,7 +141,7 @@ int translate_line(
 
     else
     {
-        return 1;
+        return 0;
     }
 }
 

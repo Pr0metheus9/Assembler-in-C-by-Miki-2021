@@ -11,7 +11,7 @@ int second_pass(char* fileName)
 
     /*string to hold filename with the ending as*/
     char fileAs[32];
-    
+
     /*create flags and set initial value of flags to false*/
     boolean errorFlag = False;
     boolean labelFlag = False;
@@ -52,18 +52,18 @@ int second_pass(char* fileName)
 
     /*create object file*/
     write_obj(fileName);
-    
+
     /*if entry labels exist then create the entry file*/
-    if(existsEnt)
+    if (existsEnt)
     {
-      write_ent(fileName);
+        write_ent(fileName);
     }
 
     /*if external labels exist then create the external file*/
-    if(existsExt)
+    if (existsExt)
     {
-      write_ext(fileName);
-    } 
+        write_ext(fileName);
+    }
 
     /*close the file being used*/
     fclose(file);
@@ -212,7 +212,7 @@ int complete_instruction(
             {
                 are = 'E';
                 ext_labels[ext_num].address = tIC;
-                strcpy(ext_labels[ext_num].label ,label_array);
+                strcpy(ext_labels[ext_num].label, label_array);
                 ext_num++;
             }
 
@@ -266,7 +266,7 @@ int complete_instruction(
                 {
                     are = 'E';
                     ext_labels[ext_num].address = tIC;
-                    strcpy(ext_labels[ext_num].label ,label_array);
+                    strcpy(ext_labels[ext_num].label, label_array);
                     ext_num++;
                 }
 
