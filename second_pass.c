@@ -160,7 +160,7 @@ int complete_instruction(char *line,boolean labelFlag,int *opcode, int *funct,ch
       }
 
       /*calculates the distance to the label*/
-      dist = targetIC - (tIC-1);
+      dist = targetIC - (tIC);
 
       if(dist>=0)
       {
@@ -170,7 +170,7 @@ int complete_instruction(char *line,boolean labelFlag,int *opcode, int *funct,ch
       /*if the distance in negative calculate its twos complement*/
       else
       {
-        content = ~(dist)+1;
+        content = ~(-dist)+1;
       }
 
       if(get_label(label_array) -> attribute == 3)
@@ -202,7 +202,6 @@ int complete_instruction(char *line,boolean labelFlag,int *opcode, int *funct,ch
         tIC++;
         line = nextpart(line);  
         clearspace(line);
-        printf("line: %c\n",*(line));
         continue; 
      }
 
