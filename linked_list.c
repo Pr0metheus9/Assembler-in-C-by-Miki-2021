@@ -80,6 +80,7 @@ Label* get_label(char label[])
   return NULL; /*label not found*/
 }
 
+
 /*function to display symbol table / linked list on screen*/
 void display()
 {

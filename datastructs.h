@@ -77,12 +77,13 @@ int label_exists(char []);
 void insertLabel(char [],int,int);
 void display();
 Label* get_label(char label[]);
+int compare_label(char label[]);
 
 /*From second_pass*/
 int second_pass (char *fileName);
 int translate_line2 (char *line,boolean errorFlag,boolean labelFlag, char label_array[32],int *opcode,int *funct);
 int complete_instruction(char *line,boolean labelFlag,int *opcode, int *funct,char label_array[32]);
-
+int check_label2(char *line, char label_array[32]);
 /*=========================================================
 Variable Declarations (For vars used throughout the program)
 ==========================================================*/

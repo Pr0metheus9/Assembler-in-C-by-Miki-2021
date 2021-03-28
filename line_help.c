@@ -80,7 +80,8 @@ void display_code()
 finds an section which is a label and sets the variable of label_array to it
 if no label section is found return 0
 =============================================*/
-int getlabelsec(char *line, char label_array[32]){
+int getlabelsec(char *line, char label_array[32])
+{
   
   int i = 0;
   

@@ -46,9 +46,6 @@ int second_pass (char *fileName)
 /*function to do stuff with the line and tables. Works using the second scan algorithm*/
 int translate_line2 (char *line,boolean errorFlag,boolean labelFlag, char label_array[32],int *opcode,int *funct)
 {
-  /*flag to tell if label was found*/
-  labelFlag = False;
-
   /*check if the line is of comment or whitespace type if so we can just skip it*/
   if(*line == ';')
   {
@@ -61,16 +58,10 @@ int translate_line2 (char *line,boolean errorFlag,boolean labelFlag, char label_
     line = clearspace(line);
   }
 
-  
-  if(line == NULL || *line == '\n' || *line == '\0')
+  /*check if it is a label if so move to the next part of the line*/
+  if(check_label2(line,label_array))
   {
-    return 0;
-  }
-
-  /*check if it is a label if so set the label flag to true (following algorithm) and move to the next part of the line*/
-  if(check_label(line,label_array))
-  {
-    return 0;
+    line = nextpart(line);
   }
 
   /*remove whitespace from the line to make it easily readable*/
@@ -101,24 +92,187 @@ int translate_line2 (char *line,boolean errorFlag,boolean labelFlag, char label_
     }
   }
 
-  line = clearspace(line);
-
+  
   /*instruction check if part is an instruction.*/ 
   if(check_intruction(line,opcode,funct))
   {
     line = nextpart(line);
     complete_instruction(line,labelFlag,opcode,funct,label_array);
-    return 0;
   }
-
-  else
-  {
-    return 1;
-  }
+  return 0;
 }
 
 /*function to complete the missing parts in the instruction array (step 6 of algorithm)*/
 int complete_instruction(char *line,boolean labelFlag,int *opcode, int *funct,char label_array[32])
 {
+  int L;
+  int i;
+
+  /*sets the right number of operators to be given in any type of instruction part 15 of algorithm*/
+  if(*opcode <= 4)
+  {
+    L = 2;
+  }
+
+  else if(*opcode>=5 && *opcode<=13)
+  {
+    L = 1;
+  }
+
+  else if(*opcode>13)
+  {
+    L = 0;
+  }
+
+  /*increments the temporary IC since every instruction has an image*/
+  tIC++;
+
+  /*loop through number of words created as a result of the instruction*/
+  for(i = 1; i <= L; i++)
+  {
+    /*Instant addressing (value of 0)*/ 
+    if(*line == '#')
+    {
+      /*move on*/
+      tIC++;
+      line = nextpart(line);
+      clearspace(line);
+      continue;
+    }
+
+    /*relative addressing (value 2)*/
+    else if(*line == '%')
+    {
+      int content;
+      int targetIC;
+      int dist;
+      char are;
+
+      line++;
+
+      /*gets the label operator*/
+      if(getlabelsec(line,label_array))
+      {
+        if(label_exists(label_array))
+        {
+          targetIC = get_label(label_array)->value;
+        }
+      }
+
+      /*calculates the distance to the label*/
+      dist = targetIC - (tIC-1);
+
+      if(dist>=0)
+      {
+        content = dist;
+      }
+
+      /*if the distance in negative calculate its twos complement*/
+      else
+      {
+        content = ~(dist)+1;
+      }
+
+      if(get_label(label_array) -> attribute == 3)
+        {
+          are = 'E';
+        }
+
+      else
+      {
+        are = 'R';
+      }
+
+      /*insert the value into the code_array*/
+      code_array[tIC-100].content = content;
+      code_array[tIC-100].are= are;
+
+
+      /*move on*/
+      line = nextpart(line);
+      clearspace(line);
+      tIC++;
+      continue;
+     }
+
+     /*direct register addressing (3)*/
+     /*if operator is a register move on since it has no extra word*/
+     else if(*line == 'r')
+     {
+        tIC++;
+        line = nextpart(line);  
+        clearspace(line);
+        printf("line: %c\n",*(line));
+        continue; 
+     }
+
+    /*direct addresing (1) (temporary, if not everything else)*/
+    /*gets the label operator*/
+    else if (getlabelsec(line,label_array))
+    {
+      int targetIC;
+      int content;
+      char are;
+
+      /*checks if the label exists in the label list*/
+      if(label_exists(label_array))
+      {
+        Label *templabel;
+        templabel = get_label(label_array);
+        targetIC = templabel -> value;
+
+        /*inserts the IC of the label into the word*/
+        content = targetIC;
+
+        if(templabel -> attribute == 3)
+        {
+          are = 'E';
+        }
+
+        else
+        {
+          are = 'R';
+        }
+
+        /*insert the value into the code_array*/
+        code_array[tIC-100].content = content;
+        code_array[tIC-100].are = are;
+
+        /*move on*/
+        line = nextpart(line);
+        clearspace(line);
+        tIC++;
+        continue;
+      }
+    }
+  }
   return 0;
+}
+
+/*finds a lable thats at the start of a line (ends with :)*/
+int check_label2(char *line, char label_array[32])
+{
+  int i = 0;
+  
+  /*move to the end of the label and save it (end is the char :)*/
+  while(*line != ':' && *line != '\0')
+  {
+    label_array[i] = *line;
+    i++;
+    line++;
+  }
+
+  label_array[i]='\0';
+
+  if(i==0)
+    return 0;
+
+  /*if you reach the end of the label, check if the saved label is a valid one */
+  if(*line == ':')
+  {
+      return 1;
+  }
+
+  return 0;
+
 }

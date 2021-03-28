@@ -72,7 +72,7 @@ int first_pass (char *fileName)
 }
 
 /*function to do stuff with the line and tables*/
-int translate_line (char *line,boolean errorFlag,boolean labelFlag, char label_array[32],int *opcode,int *funct)
+int translate_line(char *line,boolean errorFlag,boolean labelFlag, char label_array[32],int *opcode,int *funct)
 {
   /*flag to tell if label was found*/
   labelFlag = False;
